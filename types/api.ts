@@ -1,14 +1,8 @@
-// To parse this data:
-//
-//   import { Convert } from "./file";
-//
-//   const welcome = Convert.toWelcome(json);
-
-export interface NotionResults {
+export interface Page {
   object: string;
   id: string;
-  created_time: Date;
-  last_edited_time: Date;
+  created_time: string;
+  last_edited_time: string;
   cover: null;
   icon: null;
   parent: Parent;
@@ -23,23 +17,23 @@ export interface Parent {
 }
 
 export interface Properties {
-  tags: Author;
+  tags: MultiSelect;
   category: Category;
   title: Title;
   repository_url: URL;
   url: URL;
   description: Description;
   finished_at: FinishedAt;
-  author: Author;
+  authors: MultiSelect;
 }
 
-export interface Author {
+export interface MultiSelect {
   id: string;
   type: string;
-  multi_select: Select[];
+  multi_select: Tag[];
 }
 
-export interface Select {
+export interface Tag {
   id: string;
   name: string;
   color: string;
@@ -48,7 +42,7 @@ export interface Select {
 export interface Category {
   id: string;
   type: string;
-  select: Select;
+  select: Tag;
 }
 
 export interface Description {
@@ -102,13 +96,26 @@ export interface Title {
   title: RichText[];
 }
 
-// Converts JSON strings to/from your types
-export class Convert {
-  public static toNotionResults(json: string): NotionResults[] {
-    return JSON.parse(json);
-  }
+export interface TimelineItem {
+  id: string;
+  tags: Tag[];
+  category: Tag;
+  title: string;
+  repository_url: string | null;
+  url: string | null;
+  timestamp: number;
+  authors: Tag[];
+}
 
-  public static notionResultsToJson(value: NotionResults[]): string {
-    return JSON.stringify(value);
-  }
+export function mapPageToTimelineItem(page: Page): TimelineItem {
+  return {
+    id: page.id,
+    tags: page.properties.tags.multi_select,
+    category: page.properties.category.select,
+    title: page.properties.title.title[0].text.content,
+    repository_url: page.properties.repository_url.url,
+    url: page.properties.url.url,
+    timestamp: new Date(page.properties.finished_at.date.start).getTime(),
+    authors: page.properties.authors.multi_select,
+  };
 }

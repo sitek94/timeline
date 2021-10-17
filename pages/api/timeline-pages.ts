@@ -6,7 +6,7 @@ const notion = new Client({ auth: process.env.NOTION_KEY });
 
 const databaseId = process.env.NOTION_DATABASE_ID as string;
 
-async function getItems() {
+async function getPages() {
   const response = await notion.databases.query({
     database_id: databaseId,
   });
@@ -18,13 +18,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const data = await getItems();
+  const pages = await getPages();
 
-  res.status(200).json(data);
-}
-
-interface MultiSelectOption {
-  id: string;
-  name: string;
-  color: string;
+  res.status(200).json(pages);
 }
