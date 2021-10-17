@@ -1,3 +1,5 @@
+import notionToMuiColors, { MuiColor } from '../styles/notion-to-mui-colors';
+
 export interface Page {
   object: string;
   id: string;
@@ -17,35 +19,52 @@ export interface Parent {
 }
 
 export interface Properties {
-  tags: MultiSelect;
-  category: Category;
-  title: Title;
-  repository_url: URL;
-  url: URL;
-  description: Description;
-  finished_at: FinishedAt;
-  authors: MultiSelect;
+  tags: MultiSelectField;
+  category: CategoryField;
+  title: TitleField;
+  repository_url: UrlField;
+  url: UrlField;
+  description: DescriptionField;
+  finished_at: DateField;
+  authors: MultiSelectField;
 }
 
-export interface MultiSelect {
+export interface MultiSelectField {
   id: string;
   type: string;
-  multi_select: Tag[];
+  multi_select: NotionTag[];
 }
 
-export interface Tag {
+export interface NotionTag {
   id: string;
   name: string;
-  color: string;
+  color: ColorName;
 }
 
-export interface Category {
+export type CategoryName = 'conference_talk' | 'video_course';
+export type ColorName =
+  | 'default'
+  | 'pink'
+  | 'purple'
+  | 'green'
+  | 'gray'
+  | 'orange'
+  | 'brown'
+  | 'red'
+  | 'yellow'
+  | 'blue';
+
+interface NotionCategoryTag extends NotionTag {
+  name: CategoryName;
+}
+
+export interface CategoryField {
   id: string;
   type: string;
-  select: Tag;
+  select: NotionCategoryTag;
 }
 
-export interface Description {
+export interface DescriptionField {
   id: string;
   type: string;
   rich_text: RichText[];
@@ -73,7 +92,7 @@ export interface Text {
   link: null;
 }
 
-export interface FinishedAt {
+export interface DateField {
   id: string;
   type: string;
   date: DateClass;
@@ -84,22 +103,22 @@ export interface DateClass {
   end: null;
 }
 
-export interface URL {
+export interface UrlField {
   id: string;
   type: string;
   url: null | string;
 }
 
-export interface Title {
+export interface TitleField {
   id: string;
   type: string;
   title: RichText[];
 }
 
-export interface TimelineItem {
+export interface TimelineEntry {
   id: string;
   tags: Tag[];
-  category: Tag;
+  category: CategoryTag;
   title: string;
   repository_url: string | null;
   url: string | null;
@@ -107,15 +126,34 @@ export interface TimelineItem {
   authors: Tag[];
 }
 
-export function mapPageToTimelineItem(page: Page): TimelineItem {
+interface Tag {
+  id: string;
+  name: string;
+  color: MuiColor;
+}
+
+interface CategoryTag extends Tag {
+  name: CategoryName;
+}
+
+export function mapPageToTimelineEntry(page: Page): TimelineEntry {
   return {
     id: page.id,
-    tags: page.properties.tags.multi_select,
-    category: page.properties.category.select,
+    tags: page.properties.tags.multi_select.map(tag => ({
+      ...tag,
+      color: notionToMuiColors[tag.color],
+    })),
+    category: {
+      ...page.properties.category.select,
+      color: notionToMuiColors[page.properties.category.select.color],
+    },
     title: page.properties.title.title[0].text.content,
     repository_url: page.properties.repository_url.url,
     url: page.properties.url.url,
     timestamp: new Date(page.properties.finished_at.date.start).getTime(),
-    authors: page.properties.authors.multi_select,
+    authors: page.properties.authors.multi_select.map(tag => ({
+      ...tag,
+      color: notionToMuiColors[tag.color],
+    })),
   };
 }

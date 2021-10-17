@@ -1,14 +1,14 @@
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { Container, Typography } from '@mui/material';
-import { mapPageToTimelineItem, Page, TimelineItem } from '../types/api';
-import CustomTimeline from '../components/timeline';
+import { mapPageToTimelineEntry, Page, TimelineEntry } from '../types/api';
+import CustomTimeline from '../components/timeline-entries';
 
 interface IndexProps {
-  timelineItems: TimelineItem[];
+  entries: TimelineEntry[];
 }
 
-const Index = ({ timelineItems }: IndexProps) => {
+const Index = ({ entries }: IndexProps) => {
   return (
     <div>
       <Head>
@@ -19,8 +19,8 @@ const Index = ({ timelineItems }: IndexProps) => {
 
       <Container sx={{ mt: 4 }}>
         <Typography variant="h1">Timeline</Typography>
-        <CustomTimeline items={timelineItems} />
-        <pre>{JSON.stringify(timelineItems, null, 2)}</pre>
+        <CustomTimeline entries={entries} />
+        <pre>{JSON.stringify(entries, null, 2)}</pre>
       </Container>
     </div>
   );
@@ -36,10 +36,10 @@ export const getStaticProps: GetStaticProps = async () => {
     };
   }
 
-  const timelineItems = pages.map(mapPageToTimelineItem);
+  const entries = pages.map(mapPageToTimelineEntry);
 
   return {
-    props: { timelineItems }, // will be passed to the page component as props
+    props: { entries }, // will be passed to the page component as props
   };
 };
 
