@@ -1,8 +1,8 @@
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { Container, Typography } from '@mui/material';
-import { mapPageToTimelineEntry, Page, TimelineEntry } from '../types/api';
 import CustomTimeline from '../components/timeline-entries';
+import { TimelineEntry } from './api/timeline-entries';
 
 interface IndexProps {
   entries: TimelineEntry[];
@@ -27,19 +27,18 @@ const Index = ({ entries }: IndexProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch(`http://localhost:3000/api/timeline-pages`);
-  const pages: Page[] = await res.json();
+  const res = await fetch(`http://localhost:3000/api/timeline-entries`);
 
-  if (!pages) {
+  const entries: TimelineEntry[] = await res.json();
+
+  if (!entries) {
     return {
       notFound: true,
     };
   }
 
-  const entries = pages.map(mapPageToTimelineEntry);
-
   return {
-    props: { entries }, // will be passed to the page component as props
+    props: { entries },
   };
 };
 

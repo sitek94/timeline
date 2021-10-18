@@ -7,9 +7,10 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
-import { CategoryName, TimelineEntry } from '../types/api';
 import { PlayArrow, Videocam } from '@mui/icons-material';
 import { Box, Chip, useTheme } from '@mui/material';
+import { TimelineEntry } from '../pages/api/timeline-entries';
+import getColorGroup from '../styles/get-color-group';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -45,13 +46,15 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               </Typography>
               <Box>
                 {tags.map(tag => {
-                  const bgcolor = tag.color[500];
+                  const colorGroup = getColorGroup(tag.color);
+                  const bgcolor = colorGroup[500];
+                  const color = theme.palette.getContrastText(bgcolor);
                   return (
                     <Chip
                       key={tag.id}
                       sx={{
                         mx: 0.25,
-                        color: theme.palette.getContrastText(bgcolor),
+                        color,
                         bgcolor,
                       }}
                       label={tag.name}
@@ -68,7 +71,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
   );
 }
 
-const categoryIcons: Record<CategoryName, typeof PlayArrow> = {
+const categoryIcons: Record<string, typeof PlayArrow> = {
   video_course: PlayArrow,
   conference_talk: Videocam,
 };
