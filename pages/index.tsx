@@ -1,6 +1,6 @@
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { Container, Typography } from '@mui/material';
+import { Container, Divider, Paper, Typography } from '@mui/material';
 import TimelineEntries from '../components/timeline-entries';
 import { TimelineEntry } from './api/timeline-entries';
 
@@ -17,9 +17,14 @@ const Index = ({ entries }: IndexProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Container sx={{ mt: 4 }}>
-        <Typography variant="h1">Timeline</Typography>
-        <TimelineEntries entries={entries} />
+      <Container maxWidth="md">
+        <Paper sx={{ minHeight: '100vh' }}>
+          <Typography variant="h2" component="h1" textAlign="center" py={4}>
+            Timeline
+          </Typography>
+          <Divider />
+          <TimelineEntries entries={entries} />
+        </Paper>
       </Container>
     </div>
   );
