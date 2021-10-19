@@ -31,9 +31,14 @@ const Index = ({ entries }: IndexProps) => {
         </Fab>
       </Box>
 
-      <Container maxWidth="md">
+      <Container maxWidth="md" sx={{ px: 0 }}>
         <Paper sx={{ minHeight: '100vh' }} square>
-          <Typography variant="h2" component="h1" textAlign="center" py={4}>
+          <Typography
+            variant="h2"
+            component="h1"
+            textAlign={{ xs: 'left', sm: 'center' }}
+            p={4}
+          >
             Timeline
           </Typography>
           <Divider />

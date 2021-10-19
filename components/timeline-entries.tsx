@@ -6,7 +6,14 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
-import { Box, Chip, Link, Tooltip, useTheme } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Link,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { TimelineEntry } from '../pages/api/timeline-entries';
 import getColorGroup from '../styles/get-color-group';
 import { PlayArrow, Videocam } from '@mui/icons-material';
@@ -17,14 +24,23 @@ interface TimelineProps {
 
 export default function TimelineEntries({ entries }: TimelineProps) {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Timeline position="alternate" sx={{ mb: 0, pb: 4 }}>
+    <Timeline position={isMobile ? 'right' : 'alternate'} sx={{ mb: 0, pb: 4 }}>
       {entries.map(({ id, title, timestamp, tags, category, url }) => {
         const Icon = categoryIcons[category.name];
 
         return (
-          <TimelineItem key={id}>
+          <TimelineItem
+            key={id}
+            sx={{
+              // Collapse left timeline item, which is going to be empty on mobiles
+              '&:before': {
+                flex: { xs: 0, sm: 1 },
+              },
+            }}
+          >
             {/* Category Icon with Tooltip */}
             <TimelineSeparator>
               <TimelineConnector />
@@ -53,7 +69,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               >
                 {formatTimestamp(timestamp)}
               </Typography>
-
               {/* Title Link */}
               <Typography variant="h6" component="h2" mb={0.5}>
                 {url ? (
@@ -70,7 +85,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
                   title
                 )}
               </Typography>
-
               {/* Tags */}
               <Box>
                 {tags.map(tag => {
