@@ -19,7 +19,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
   const theme = useTheme();
 
   return (
-    <Timeline position="alternate">
+    <Timeline position="alternate" sx={{ mb: 0, pb: 4 }}>
       {entries.map(({ id, title, timestamp, tags, category, url }) => {
         const Icon = categoryIcons[category.name];
 

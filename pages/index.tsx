@@ -1,14 +1,18 @@
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
-import { Container, Divider, Paper, Typography } from '@mui/material';
+import { Box, Container, Divider, Fab, Paper, Typography } from '@mui/material';
 import TimelineEntries from '../components/timeline-entries';
 import { TimelineEntry } from './api/timeline-entries';
+import { NightsStay, WbSunny } from '@mui/icons-material';
+import { useColorMode } from '../styles/color-mode-and-theme';
 
 interface IndexProps {
   entries: TimelineEntry[];
 }
 
 const Index = ({ entries }: IndexProps) => {
+  const colorMode = useColorMode();
+
   return (
     <div>
       <Head>
@@ -17,8 +21,18 @@ const Index = ({ entries }: IndexProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <Box sx={{ position: 'absolute', top: 0, right: 0, m: 4 }}>
+        <Fab
+          color={colorMode.isDark ? 'default' : 'primary'}
+          aria-label="toggle light/dark mode"
+          onClick={colorMode.toggle}
+        >
+          {colorMode.isDark ? <WbSunny /> : <NightsStay />}
+        </Fab>
+      </Box>
+
       <Container maxWidth="md">
-        <Paper sx={{ minHeight: '100vh' }}>
+        <Paper sx={{ minHeight: '100vh' }} square>
           <Typography variant="h2" component="h1" textAlign="center" py={4}>
             Timeline
           </Typography>
