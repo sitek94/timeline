@@ -4,7 +4,6 @@ import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 import { Box, Chip, Link, Tooltip, useTheme } from '@mui/material';
@@ -26,16 +25,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
 
         return (
           <TimelineItem key={id}>
-            {/* Date */}
-            <TimelineOppositeContent
-              sx={{ m: 'auto 0' }}
-              align="right"
-              variant="body2"
-              color="text.secondary"
-            >
-              {new Date(timestamp).toDateString()}
-            </TimelineOppositeContent>
-
             {/* Category Icon with Tooltip */}
             <TimelineSeparator>
               <TimelineConnector />
@@ -56,8 +45,17 @@ export default function TimelineEntries({ entries }: TimelineProps) {
             </TimelineSeparator>
 
             <TimelineContent sx={{ py: '12px', px: 2 }}>
+              {/* Date */}
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+              >
+                {formatTimestamp(timestamp)}
+              </Typography>
+
               {/* Title Link */}
-              <Typography variant="h6" component="span">
+              <Typography variant="h6" component="h2" mb={0.5}>
                 {url ? (
                   <Link
                     color="inherit"
@@ -108,4 +106,13 @@ const categoryIcons: Record<string, typeof PlayArrow> = {
 
 function formatCategoryName(kebabCaseName: string) {
   return kebabCaseName.split('-').join(' ');
+}
+
+function formatTimestamp(timestamp: number) {
+  const date = new Date(timestamp);
+  const formatter = new Intl.DateTimeFormat([], {
+    dateStyle: 'long',
+  });
+
+  return formatter.format(date);
 }
