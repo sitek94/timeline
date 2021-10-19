@@ -1,7 +1,7 @@
 import type { GetStaticProps } from 'next';
 import Head from 'next/head';
 import { Container, Typography } from '@mui/material';
-import CustomTimeline from '../components/timeline-entries';
+import TimelineEntries from '../components/timeline-entries';
 import { TimelineEntry } from './api/timeline-entries';
 
 interface IndexProps {
@@ -19,8 +19,7 @@ const Index = ({ entries }: IndexProps) => {
 
       <Container sx={{ mt: 4 }}>
         <Typography variant="h1">Timeline</Typography>
-        <CustomTimeline entries={entries} />
-        <pre>{JSON.stringify(entries, null, 2)}</pre>
+        <TimelineEntries entries={entries} />
       </Container>
     </div>
   );

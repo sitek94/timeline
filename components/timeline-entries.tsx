@@ -7,10 +7,10 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
-import { PlayArrow, Videocam } from '@mui/icons-material';
-import { Box, Chip, useTheme } from '@mui/material';
+import { Box, Chip, Link, useTheme } from '@mui/material';
 import { TimelineEntry } from '../pages/api/timeline-entries';
 import getColorGroup from '../styles/get-color-group';
+import { PlayArrow, Videocam } from '@mui/icons-material';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -21,10 +21,12 @@ export default function TimelineEntries({ entries }: TimelineProps) {
 
   return (
     <Timeline position="alternate">
-      {entries.map(({ id, title, timestamp, tags, category }) => {
+      {entries.map(({ id, title, timestamp, tags, category, url }) => {
         const Icon = categoryIcons[category.name];
+
         return (
           <TimelineItem key={id}>
+            {/* Date */}
             <TimelineOppositeContent
               sx={{ m: 'auto 0' }}
               align="right"
@@ -33,6 +35,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
             >
               {new Date(timestamp).toDateString()}
             </TimelineOppositeContent>
+
             <TimelineSeparator>
               <TimelineConnector />
               <TimelineDot>
@@ -40,10 +43,26 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               </TimelineDot>
               <TimelineConnector />
             </TimelineSeparator>
+
             <TimelineContent sx={{ py: '12px', px: 2 }}>
+              {/* Title Link */}
               <Typography variant="h6" component="span">
-                {title}
+                {url ? (
+                  <Link
+                    color="inherit"
+                    underline="none"
+                    href={url}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    {title}
+                  </Link>
+                ) : (
+                  title
+                )}
               </Typography>
+
+              {/* Tags */}
               <Box>
                 {tags.map(tag => {
                   const colorGroup = getColorGroup(tag.color);
@@ -72,6 +91,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
 }
 
 const categoryIcons: Record<string, typeof PlayArrow> = {
-  video_course: PlayArrow,
-  conference_talk: Videocam,
+  'video-course': PlayArrow,
+  'conference-talk': Videocam,
 };
