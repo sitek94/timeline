@@ -7,7 +7,7 @@ import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
-import { Box, Chip, Link, useTheme } from '@mui/material';
+import { Box, Chip, Link, Tooltip, useTheme } from '@mui/material';
 import { TimelineEntry } from '../pages/api/timeline-entries';
 import getColorGroup from '../styles/get-color-group';
 import { PlayArrow, Videocam } from '@mui/icons-material';
@@ -36,11 +36,22 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               {new Date(timestamp).toDateString()}
             </TimelineOppositeContent>
 
+            {/* Category Icon with Tooltip */}
             <TimelineSeparator>
               <TimelineConnector />
-              <TimelineDot>
-                <Icon />
-              </TimelineDot>
+              <Tooltip
+                arrow
+                placement="top"
+                title={
+                  <Box sx={{ textTransform: 'capitalize' }}>
+                    {formatCategoryName(category.name)}
+                  </Box>
+                }
+              >
+                <TimelineDot>
+                  <Icon />
+                </TimelineDot>
+              </Tooltip>
               <TimelineConnector />
             </TimelineSeparator>
 
@@ -94,3 +105,7 @@ const categoryIcons: Record<string, typeof PlayArrow> = {
   'video-course': PlayArrow,
   'conference-talk': Videocam,
 };
+
+function formatCategoryName(kebabCaseName: string) {
+  return kebabCaseName.split('-').join(' ');
+}
