@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { TimelineEntry } from '../pages/api/timeline-entries';
 import getColorGroup from '../styles/get-color-group';
-import { PlayArrow, Videocam } from '@mui/icons-material';
+import { Help, PlayArrow, Videocam } from '@mui/icons-material';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -29,7 +29,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
   return (
     <Timeline position={isMobile ? 'right' : 'alternate'} sx={{ mb: 0, pb: 4 }}>
       {entries.map(({ id, title, timestamp, tags, category, url }) => {
-        const Icon = categoryIcons[category.name];
+        const Icon = categoryIcons[category.name] || Help;
 
         return (
           <TimelineItem
@@ -53,7 +53,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
                   </Box>
                 }
               >
-                <TimelineDot>
+                <TimelineDot variant="outlined">
                   <Icon />
                 </TimelineDot>
               </Tooltip>
