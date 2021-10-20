@@ -14,9 +14,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { TimelineEntry } from '../pages/api/timeline-entries';
 import getColorGroup from '../styles/get-color-group';
 import { Help, PlayArrow, TouchApp, Videocam } from '@mui/icons-material';
+import { TimelineEntry } from '../api/get-timeline-entries';
 
 interface TimelineProps {
   entries: TimelineEntry[];

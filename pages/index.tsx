@@ -1,10 +1,10 @@
-import type { GetStaticProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Container, Divider, Fab, Paper, Typography } from '@mui/material';
 import TimelineEntries from '../components/timeline-entries';
-import { TimelineEntry } from './api/timeline-entries';
 import { NightsStay, WbSunny } from '@mui/icons-material';
 import { useColorMode } from '../styles/color-mode-and-theme';
+import { getTimelineEntries, TimelineEntry } from '../api/get-timeline-entries';
 
 interface IndexProps {
   entries: TimelineEntry[];
@@ -49,10 +49,8 @@ const Index = ({ entries }: IndexProps) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch(`http://localhost:3000/api/timeline-entries`);
-
-  const entries: TimelineEntry[] = await res.json();
+export const getServerSideProps: GetServerSideProps = async () => {
+  const entries = await getTimelineEntries();
 
   if (!entries) {
     return {

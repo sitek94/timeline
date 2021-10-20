@@ -1,19 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from '@notionhq/client';
 
 const notion = new Client({ auth: process.env.NOTION_KEY });
 const databaseId = process.env.NOTION_DATABASE_ID as string;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<TimelineEntry[]>,
-) {
+export async function getTimelineEntries() {
   const response = await notion.databases.query({
     database_id: databaseId,
   });
   const timelineEntries = mapResponseToTimelineEntries(response);
 
-  res.status(200).json(timelineEntries);
+  return timelineEntries;
 }
 
 function mapResponseToTimelineEntries(response: {
