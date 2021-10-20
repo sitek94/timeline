@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "check-types": "tsc --pretty --noEmit",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@emotion/cache": "^11.5.0",
@@ -29,7 +31,13 @@
     "eslint": "^7.32.0",
     "eslint-config-next": "11.1.2",
     "eslint-config-prettier": "^8.3.0",
+    "husky": ">=6",
+    "lint-staged": ">=10",
     "prettier": "^2.4.1",
     "typescript": "4.4.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "yarn lint",
+    "*.{js,jsx,ts,tsx,json,md}": "yarn format"
   }
 }
