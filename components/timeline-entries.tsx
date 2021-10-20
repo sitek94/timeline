@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { TimelineEntry } from '../pages/api/timeline-entries';
 import getColorGroup from '../styles/get-color-group';
-import { Help, PlayArrow, Videocam } from '@mui/icons-material';
+import { Help, PlayArrow, TouchApp, Videocam } from '@mui/icons-material';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -116,6 +116,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
 const categoryIcons: Record<string, typeof PlayArrow> = {
   'video-course': PlayArrow,
   'conference-talk': Videocam,
+  'interactive-course': TouchApp,
 };
 
 function formatCategoryName(kebabCaseName: string) {
