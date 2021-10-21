@@ -7,17 +7,19 @@ export async function getTimelineEntries() {
   const response = await notion.databases.query({
     database_id: databaseId,
   });
-  const timelineEntries = mapResponseToTimelineEntries(response);
+  const timelineEntries = response.results.map(result => {
+    try {
+      return createTimelineEntry(result);
+    } catch {
+      return createDummyEntry();
+    }
+  });
 
   return timelineEntries;
 }
 
-function mapResponseToTimelineEntries(response: {
-  // It's just too painful to type Notion Response,
-  // hopefully they will add some generics in the future.
-  results: any[];
-}): TimelineEntry[] {
-  return response.results.map(result => ({
+function createTimelineEntry(result: any): TimelineEntry {
+  return {
     id: result.id,
     title: result.properties.title.title[0].text.content as string,
     tags: result.properties.tags.multi_select,
@@ -26,7 +28,36 @@ function mapResponseToTimelineEntries(response: {
     url: result.properties.url.url,
     timestamp: new Date(result.properties.finished_at.date.start).getTime(),
     authors: result.properties.authors.multi_select as Author[],
-  }));
+  };
+}
+
+function createDummyEntry(): TimelineEntry {
+  return {
+    id: 'abc123',
+    title: 'Something went wrong!',
+    tags: [
+      {
+        id: 'a',
+        name: 'error',
+        color: 'red',
+      },
+    ],
+    category: {
+      id: 'a',
+      name: 'error',
+      color: 'red',
+    },
+    url: 'https://www.notion.so/',
+    repository_url: '',
+    timestamp: new Date().getTime(),
+    authors: [
+      {
+        id: 'a',
+        name: 'Maciek Sitkowski',
+        color: 'red',
+      },
+    ],
+  };
 }
 
 export interface TimelineEntry {
