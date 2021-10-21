@@ -15,7 +15,14 @@ import {
   useTheme,
 } from '@mui/material';
 import getColorGroup from '../styles/get-color-group';
-import { Help, PlayArrow, TouchApp, Videocam } from '@mui/icons-material';
+import {
+  Build,
+  Close,
+  Help,
+  PlayArrow,
+  TouchApp,
+  Videocam,
+} from '@mui/icons-material';
 import { TimelineEntry } from '../api/get-timeline-entries';
 
 interface TimelineProps {
@@ -117,6 +124,8 @@ const categoryIcons: Record<string, typeof PlayArrow> = {
   'video-course': PlayArrow,
   'conference-talk': Videocam,
   'interactive-course': TouchApp,
+  workshop: Build,
+  error: Close,
 };
 
 function formatCategoryName(kebabCaseName: string) {
