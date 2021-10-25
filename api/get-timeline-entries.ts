@@ -21,13 +21,15 @@ export async function getTimelineEntries() {
 function createTimelineEntry(result: any): TimelineEntry {
   return {
     id: result.id,
-    title: result.properties.title.title[0].text.content as string,
+    title: result.properties.title.title[0]?.plain_text,
+    description:
+      result.properties.description?.rich_text[0]?.plain_text ?? null,
     tags: result.properties.tags.multi_select,
     category: result.properties.category.select,
     repository_url: result.properties.repository_url.url,
     url: result.properties.url.url,
     timestamp: new Date(result.properties.finished_at.date.start).getTime(),
-    authors: result.properties.authors.multi_select as Author[],
+    authors: result.properties.authors.multi_select,
   };
 }
 
@@ -35,6 +37,7 @@ function createDummyEntry(): TimelineEntry {
   return {
     id: 'abc123',
     title: 'Something went wrong!',
+    description: null,
     tags: [
       {
         id: 'a',
@@ -65,6 +68,7 @@ export interface TimelineEntry {
   tags: Tag[];
   category: Category;
   title: string;
+  description: string | null;
   repository_url: string | null;
   url: string | null;
   timestamp: number;
@@ -77,9 +81,17 @@ interface Tag {
   color: ColorName;
 }
 
+export type CategoryName =
+  | 'video-course'
+  | 'conference-talk'
+  | 'interactive-course'
+  | 'workshop'
+  | 'error'
+  | 'podcast';
+
 interface Category {
   id: string;
-  name: string;
+  name: CategoryName;
   color: ColorName;
 }
 

@@ -20,10 +20,11 @@ import {
   Close,
   Help,
   PlayArrow,
+  Podcasts,
   TouchApp,
   Videocam,
 } from '@mui/icons-material';
-import { TimelineEntry } from '../api/get-timeline-entries';
+import { CategoryName, TimelineEntry } from '../api/get-timeline-entries';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -35,97 +36,106 @@ export default function TimelineEntries({ entries }: TimelineProps) {
 
   return (
     <Timeline position={isMobile ? 'right' : 'alternate'} sx={{ mb: 0, pb: 4 }}>
-      {entries.map(({ id, title, timestamp, tags, category, url }) => {
-        const Icon = categoryIcons[category.name] || Help;
+      {entries.map(
+        ({ id, title, description, timestamp, tags, category, url }) => {
+          const Icon = categoryIcons[category.name] || Help;
 
-        return (
-          <TimelineItem
-            key={id}
-            sx={{
-              // Collapse left timeline item, which is going to be empty on mobiles
-              '&:before': {
-                flex: { xs: 0, sm: 1 },
-              },
-            }}
-          >
-            {/* Category Icon with Tooltip */}
-            <TimelineSeparator>
-              <TimelineConnector />
-              <Tooltip
-                arrow
-                placement="top"
-                title={
-                  <Box sx={{ textTransform: 'capitalize' }}>
-                    {formatCategoryName(category.name)}
-                  </Box>
-                }
-              >
-                <TimelineDot variant="outlined">
-                  <Icon />
-                </TimelineDot>
-              </Tooltip>
-              <TimelineConnector />
-            </TimelineSeparator>
+          return (
+            <TimelineItem
+              key={id}
+              sx={{
+                // Collapse left timeline item, which is going to be empty on mobiles
+                '&:before': {
+                  flex: { xs: 0, sm: 1 },
+                },
+              }}
+            >
+              {/* Category Icon with Tooltip */}
+              <TimelineSeparator>
+                <TimelineConnector />
+                <Tooltip
+                  arrow
+                  placement="top"
+                  title={
+                    <Box sx={{ textTransform: 'capitalize' }}>
+                      {formatCategoryName(category.name)}
+                    </Box>
+                  }
+                >
+                  <TimelineDot variant="outlined">
+                    <Icon />
+                  </TimelineDot>
+                </Tooltip>
+                <TimelineConnector />
+              </TimelineSeparator>
 
-            <TimelineContent sx={{ py: '12px', px: 2 }}>
-              {/* Date */}
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                component="span"
-              >
-                {formatTimestamp(timestamp)}
-              </Typography>
-              {/* Title Link */}
-              <Typography variant="h6" component="h2" mb={0.5}>
-                {url ? (
-                  <Link
-                    color="inherit"
-                    underline="none"
-                    href={url}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    {title}
-                  </Link>
-                ) : (
-                  title
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
+                {/* Date */}
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  component="span"
+                >
+                  {formatTimestamp(timestamp)}
+                </Typography>
+                {/* Title Link */}
+                <Typography variant="h6" component="h2" mb={0.5}>
+                  {url ? (
+                    <Link
+                      color="inherit"
+                      underline="none"
+                      href={url}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {title}
+                    </Link>
+                  ) : (
+                    title
+                  )}
+                </Typography>
+                {description && (
+                  <Typography variant="body2" mb={0.5}>
+                    {description}
+                  </Typography>
                 )}
-              </Typography>
-              {/* Tags */}
-              <Box>
-                {tags.map(tag => {
-                  const colorGroup = getColorGroup(tag.color);
-                  const bgcolor = colorGroup[500];
-                  const color = theme.palette.getContrastText(bgcolor);
-                  return (
-                    <Chip
-                      key={tag.id}
-                      sx={{
-                        mx: 0.25,
-                        color,
-                        bgcolor,
-                      }}
-                      label={tag.name}
-                      size="small"
-                    />
-                  );
-                })}
-              </Box>
-            </TimelineContent>
-          </TimelineItem>
-        );
-      })}
+
+                {/* Tags */}
+                <Box>
+                  {tags.map(tag => {
+                    const colorGroup = getColorGroup(tag.color);
+                    const bgcolor = colorGroup[500];
+                    const color = theme.palette.getContrastText(bgcolor);
+                    return (
+                      <Chip
+                        key={tag.id}
+                        sx={{
+                          mx: 0.25,
+                          color,
+                          bgcolor,
+                        }}
+                        label={tag.name}
+                        size="small"
+                      />
+                    );
+                  })}
+                </Box>
+              </TimelineContent>
+            </TimelineItem>
+          );
+        },
+      )}
     </Timeline>
   );
 }
 
-const categoryIcons: Record<string, typeof PlayArrow> = {
+const categoryIcons: Record<CategoryName, typeof PlayArrow> = {
   'video-course': PlayArrow,
   'conference-talk': Videocam,
   'interactive-course': TouchApp,
   workshop: Build,
   error: Close,
+  podcast: Podcasts,
 };
 
 function formatCategoryName(kebabCaseName: string) {
