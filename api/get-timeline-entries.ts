@@ -11,7 +11,7 @@ export async function getTimelineEntries() {
     try {
       return createTimelineEntry(result);
     } catch {
-      return createDummyEntry();
+      return createErrorEntry();
     }
   });
 
@@ -33,7 +33,7 @@ function createTimelineEntry(result: any): TimelineEntry {
   };
 }
 
-function createDummyEntry(): TimelineEntry {
+function createErrorEntry(): TimelineEntry {
   return {
     id: 'abc123',
     title: 'Something went wrong!',
