@@ -4,7 +4,7 @@ import {
   ThemeProvider as MuiThemeProvider,
 } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
-import { PaletteMode } from '@mui/material';
+import { PaletteMode, useMediaQuery } from '@mui/material';
 
 const ColorModeContext = React.createContext<
   { isDark: boolean; toggle: () => void } | undefined
@@ -15,7 +15,10 @@ export default function ColorModeAndThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [mode, setMode] = React.useState<PaletteMode>('light');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const userPreferredMode: PaletteMode = prefersDarkMode ? 'dark' : 'light';
+
+  const [mode, setMode] = React.useState<PaletteMode>(userPreferredMode);
   const colorMode = React.useMemo(
     () => ({
       isDark: mode === 'dark',
@@ -25,8 +28,14 @@ export default function ColorModeAndThemeProvider({
         );
       },
     }),
-    [mode],
+    [mode, setMode],
   );
+
+  React.useEffect(() => {
+    if (userPreferredMode) {
+      setMode(userPreferredMode);
+    }
+  }, [userPreferredMode]);
 
   const theme = React.useMemo(() => createTheme(mode), [mode]);
 
