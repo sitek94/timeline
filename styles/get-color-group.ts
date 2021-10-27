@@ -1,5 +1,5 @@
 import * as muiColors from '@mui/material/colors';
-import { ColorName } from '../api/get-timeline-entries';
+import { ColorName } from '../pages/api/timeline-entries';
 
 export type MuiColors = typeof muiColors;
 export type MuiColorName = keyof MuiColors;
