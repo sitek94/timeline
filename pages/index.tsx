@@ -8,12 +8,14 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import TimelineEntries from '../components/timeline-entries';
-import { NightsStay, WbSunny } from '@mui/icons-material';
 import { useColorMode } from '../styles/color-mode-and-theme';
 import useSWR from 'swr';
 import * as React from 'react';
 import { TimelineEntry } from './api/timeline-entries';
+import tissueSvg from '../images/tissue.svg';
+import Image from 'next/image';
+import { NightsStay, WbSunny } from '@mui/icons-material';
+import TimelineEntries from '../components/timeline-entries';
 
 export default function Index() {
   const colorMode = useColorMode();
@@ -49,7 +51,32 @@ export default function Index() {
           </Typography>
           <Divider />
           {isLoading && <LinearProgress />}
-          {isError && <h1>Ops, sorry :(</h1>}
+          {isError && (
+            <Box
+              sx={{
+                textAlign: 'center',
+              }}
+            >
+              <Image
+                src={tissueSvg}
+                alt="Empty toilet paper tissue"
+                width={300}
+                height={300}
+              />
+              <Typography
+                mt={-4}
+                mb={1}
+                variant="h5"
+                component="h2"
+                textAlign="center"
+              >
+                {`"Oops!...I Did It Again" - Britney Spears.`}
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                {`We're really sorry, but something went wrong. Try refreshing the page.`}
+              </Typography>
+            </Box>
+          )}
           {timelineEntries && <TimelineEntries entries={timelineEntries} />}
         </Paper>
       </Container>
