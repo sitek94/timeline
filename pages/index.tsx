@@ -1,21 +1,23 @@
 import Head from 'next/head';
-import { Box, Container, Divider, Fab, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Container,
+  Divider,
+  Fab,
+  LinearProgress,
+  Paper,
+  Typography,
+} from '@mui/material';
 import TimelineEntries from '../components/timeline-entries';
 import { NightsStay, WbSunny } from '@mui/icons-material';
 import { useColorMode } from '../styles/color-mode-and-theme';
-import { TimelineEntry } from '../api/get-timeline-entries';
 import useSWR from 'swr';
 import * as React from 'react';
+import { TimelineEntry } from './api/timeline-entries';
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
-
-const Index = () => {
+export default function Index() {
   const colorMode = useColorMode();
-
-  const { data: timelineEntries } = useSWR<TimelineEntry[]>(
-    'http://localhost:3000/api/timeline-entries',
-    fetcher,
-  );
+  const { timelineEntries, isError, isLoading } = useTimelineEntries();
 
   return (
     <div>
@@ -46,11 +48,24 @@ const Index = () => {
             Timeline
           </Typography>
           <Divider />
-          <TimelineEntries entries={timelineEntries || []} />
+          {isLoading && <LinearProgress />}
+          {isError && <h1>Ops, sorry :(</h1>}
+          {timelineEntries && <TimelineEntries entries={timelineEntries} />}
         </Paper>
       </Container>
     </div>
   );
-};
+}
 
-export default Index;
+function useTimelineEntries() {
+  const { data, error } = useSWR<TimelineEntry[]>(
+    '/api/timeline-entries',
+    (url: string) => fetch(url).then(res => res.json()),
+  );
+
+  return {
+    timelineEntries: data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+}
