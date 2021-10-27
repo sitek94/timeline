@@ -1,17 +1,21 @@
-import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { Box, Container, Divider, Fab, Paper, Typography } from '@mui/material';
 import TimelineEntries from '../components/timeline-entries';
 import { NightsStay, WbSunny } from '@mui/icons-material';
 import { useColorMode } from '../styles/color-mode-and-theme';
-import { getTimelineEntries, TimelineEntry } from '../api/get-timeline-entries';
+import { TimelineEntry } from '../api/get-timeline-entries';
+import useSWR from 'swr';
+import * as React from 'react';
 
-interface IndexProps {
-  entries: TimelineEntry[];
-}
+const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const Index = ({ entries }: IndexProps) => {
+const Index = () => {
   const colorMode = useColorMode();
+
+  const { data: timelineEntries } = useSWR<TimelineEntry[]>(
+    'http://localhost:3000/api/timeline-entries',
+    fetcher,
+  );
 
   return (
     <div>
@@ -42,25 +46,11 @@ const Index = ({ entries }: IndexProps) => {
             Timeline
           </Typography>
           <Divider />
-          <TimelineEntries entries={entries} />
+          <TimelineEntries entries={timelineEntries || []} />
         </Paper>
       </Container>
     </div>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const entries = await getTimelineEntries();
-
-  if (!entries) {
-    return {
-      notFound: true,
-    };
-  }
-
-  return {
-    props: { entries },
-  };
 };
 
 export default Index;
