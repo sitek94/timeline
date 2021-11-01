@@ -101,7 +101,8 @@ export type CategoryName =
   | 'interactive-course'
   | 'workshop'
   | 'error'
-  | 'podcast';
+  | 'podcast'
+  | 'university-course';
 
 interface Category {
   id: string;

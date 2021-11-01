@@ -21,6 +21,7 @@ import {
   Help,
   PlayArrow,
   Podcasts,
+  School,
   TouchApp,
   Videocam,
 } from '@mui/icons-material';
@@ -136,6 +137,7 @@ const categoryIcons: Record<CategoryName, typeof PlayArrow> = {
   workshop: Build,
   error: Close,
   podcast: Podcasts,
+  'university-course': School,
 };
 
 function formatCategoryName(kebabCaseName: string) {
