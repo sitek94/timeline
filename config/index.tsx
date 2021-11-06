@@ -6,6 +6,7 @@ import {
   PlayArrow,
   Podcasts,
   School,
+  Slideshow,
   TouchApp,
   Videocam,
 } from '@mui/icons-material';
@@ -24,6 +25,7 @@ export const categoryIcons = {
   'university-course': <School />,
   unknown: <Help />,
   book: <LocalLibrary />,
+  webinar: <Slideshow />,
 };
 
 // COLORS
