@@ -38,9 +38,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
   return (
     <Timeline position={isMobile ? 'right' : 'alternate'} sx={{ mb: 0, pb: 4 }}>
       {entries.map(
-        ({ id, title, description, timestamp, tags, category, url }) => {
-          const Icon = categoryIcons[category.name] || Help;
-
+        ({ id, title, description, finished_at, tags, category, url }) => {
           return (
             <TimelineItem
               key={id}
@@ -64,7 +62,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
                   }
                 >
                   <TimelineDot variant="outlined">
-                    <Icon />
+                    {categoryIcons[category.name]}
                   </TimelineDot>
                 </Tooltip>
                 <TimelineConnector />
@@ -77,7 +75,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
                   color="text.secondary"
                   component="span"
                 >
-                  {formatTimestamp(timestamp)}
+                  {formatTimestamp(finished_at)}
                 </Typography>
                 {/* Title Link */}
                 <Typography variant="h6" component="h2" mb={0.5}>
@@ -130,14 +128,15 @@ export default function TimelineEntries({ entries }: TimelineProps) {
   );
 }
 
-const categoryIcons: Record<CategoryName, typeof PlayArrow> = {
-  'video-course': PlayArrow,
-  'conference-talk': Videocam,
-  'interactive-course': TouchApp,
-  workshop: Build,
-  error: Close,
-  podcast: Podcasts,
-  'university-course': School,
+const categoryIcons: Record<CategoryName, JSX.Element> = {
+  'video-course': <PlayArrow />,
+  'conference-talk': <Videocam />,
+  'interactive-course': <TouchApp />,
+  workshop: <Build />,
+  error: <Close />,
+  podcast: <Podcasts />,
+  'university-course': <School />,
+  unknown: <Help />,
 };
 
 function formatCategoryName(kebabCaseName: string) {

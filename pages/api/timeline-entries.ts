@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from '@notionhq/client';
+import { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,72 +22,90 @@ export async function getTimelineEntries() {
   const response = await notion.databases.query({
     database_id: databaseId,
   });
+
   const timelineEntries = response.results.map(result => {
     try {
-      return createTimelineEntry(result);
-    } catch {
-      return createErrorEntry();
+      return mapResultToTimelineEntry(result);
+    } catch (e: any) {
+      return createErrorEntry(e);
     }
   });
 
   return timelineEntries;
 }
 
-function createTimelineEntry(result: any): TimelineEntry {
-  return {
-    id: result.id,
-    title: result.properties.title.title[0]?.plain_text,
-    description:
-      result.properties.description?.rich_text[0]?.plain_text ?? null,
-    tags: result.properties.tags.multi_select,
-    category: result.properties.category.select,
-    repository_url: result.properties.repository_url.url,
-    url: result.properties.url.url,
-    timestamp: new Date(result.properties.finished_at.date.start).getTime(),
-    authors: result.properties.authors.multi_select,
-  };
-}
-
-function createErrorEntry(): TimelineEntry {
+function createErrorEntry(e: Error): TimelineEntry {
   return {
     id: 'abc123',
     title: 'Something went wrong!',
-    description: null,
-    tags: [
-      {
-        id: 'a',
-        name: 'error',
-        color: 'red',
-      },
-    ],
+    description: e.message,
+    tags: [],
     category: {
       id: 'a',
       name: 'error',
       color: 'red',
     },
     url: 'https://www.notion.so/',
-    repository_url: '',
-    timestamp: new Date().getTime(),
-    authors: [
-      {
-        id: 'a',
-        name: 'Maciek Sitkowski',
-        color: 'red',
-      },
-    ],
+    finished_at: new Date().getTime(),
+    authors: [],
   };
 }
 
 export interface TimelineEntry {
   id: string;
-  tags: Tag[];
-  category: Category;
   title: string;
-  description: string | null;
-  repository_url: string | null;
-  url: string | null;
-  timestamp: number;
-  authors: Author[];
+  category: Category;
+  tags: Tag[];
+  url: string;
+  finished_at: number;
+  description?: string;
+  repository_url?: string;
+  authors?: Author[];
+}
+
+type QueryDatabaseResponseResult = QueryDatabaseResponse['results'][number];
+
+const defaultEntry: Partial<TimelineEntry> = {
+  title: 'No Title',
+  category: {
+    id: 'a',
+    name: 'unknown',
+    color: 'yellow',
+  },
+  tags: [],
+  url: 'https://www.notion.so/',
+  finished_at: new Date().getTime(),
+};
+
+export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
+  const timelineEntry: Record<string, unknown> = {
+    id: result.id,
+    ...defaultEntry,
+  };
+
+  for (const [propName, propValue] of Object.entries(result.properties)) {
+    if (propValue.type === 'title') {
+      timelineEntry[propName] = propValue.title[0]?.plain_text;
+    }
+
+    if (propValue.type === 'select') {
+      timelineEntry[propName] = propValue.select;
+    }
+
+    if (propValue.type === 'multi_select') {
+      timelineEntry[propName] = propValue.multi_select;
+    }
+
+    if (propValue.type === 'rich_text') {
+      timelineEntry[propName] = propValue.rich_text[0]?.plain_text;
+    }
+
+    if (propValue.type === 'date') {
+      timelineEntry[propName] = new Date(propValue.date?.start).getTime();
+    }
+  }
+
+  return timelineEntry as unknown as TimelineEntry;
 }
 
 interface Tag {
@@ -100,9 +119,10 @@ export type CategoryName =
   | 'conference-talk'
   | 'interactive-course'
   | 'workshop'
-  | 'error'
   | 'podcast'
-  | 'university-course';
+  | 'university-course'
+  | 'error'
+  | 'unknown';
 
 interface Category {
   id: string;
