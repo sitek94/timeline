@@ -2,6 +2,7 @@ import {
   Build,
   Close,
   Help,
+  LocalLibrary,
   PlayArrow,
   Podcasts,
   School,
@@ -22,6 +23,7 @@ export const categoryIcons = {
   podcast: <Podcasts />,
   'university-course': <School />,
   unknown: <Help />,
+  book: <LocalLibrary />,
 };
 
 // COLORS
