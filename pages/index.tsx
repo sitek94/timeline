@@ -8,14 +8,14 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import { useColorMode } from '../styles/color-mode-and-theme';
+import { useColorMode } from 'styles/color-mode-and-theme';
 import useSWR from 'swr';
 import * as React from 'react';
-import { TimelineEntry } from './api/timeline-entries';
-import tissueSvg from '../images/tissue.svg';
+import { TimelineEntry } from 'types';
+import tissueSvg from 'images/tissue.svg';
 import Image from 'next/image';
 import { NightsStay, WbSunny } from '@mui/icons-material';
-import TimelineEntries from '../components/timeline-entries';
+import TimelineEntries from 'components/timeline-entries';
 
 export default function Index() {
   const colorMode = useColorMode();

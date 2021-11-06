@@ -9,9 +9,9 @@ import {
   TouchApp,
   Videocam,
 } from '@mui/icons-material';
-import { ColorName } from '../types';
+import { ColorName } from 'types';
 import * as muiColors from '@mui/material/colors';
-import { MuiColor } from '../styles/get-color-group';
+import { MuiColor } from 'styles/get-color-group';
 
 // CATEGORIES
 export const categoryIcons = {
