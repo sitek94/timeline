@@ -25,7 +25,7 @@ import {
   TouchApp,
   Videocam,
 } from '@mui/icons-material';
-import { CategoryName, TimelineEntry } from '../pages/api/timeline-entries';
+import { CategoryName, TimelineEntry } from 'types';
 
 interface TimelineProps {
   entries: TimelineEntry[];

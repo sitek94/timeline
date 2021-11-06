@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from '@notionhq/client';
-import { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
+import { QueryDatabaseResponseResult, TimelineEntry } from 'types';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,49 +34,6 @@ export async function getTimelineEntries() {
   return timelineEntries;
 }
 
-function createErrorEntry(e: Error): TimelineEntry {
-  return {
-    id: 'abc123',
-    title: 'Something went wrong!',
-    description: e.message,
-    tags: [],
-    category: {
-      id: 'a',
-      name: 'error',
-      color: 'red',
-    },
-    url: 'https://www.notion.so/',
-    finished_at: new Date().getTime(),
-    authors: [],
-  };
-}
-
-export interface TimelineEntry {
-  id: string;
-  title: string;
-  category: Category;
-  tags: Tag[];
-  url: string;
-  finished_at: number;
-  description?: string;
-  repository_url?: string;
-  authors?: Author[];
-}
-
-type QueryDatabaseResponseResult = QueryDatabaseResponse['results'][number];
-
-const defaultEntry: Partial<TimelineEntry> = {
-  title: 'No Title',
-  category: {
-    id: 'a',
-    name: 'unknown',
-    color: 'yellow',
-  },
-  tags: [],
-  url: 'https://www.notion.so/',
-  finished_at: new Date().getTime(),
-};
-
 export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
   const timelineEntry: Record<string, unknown> = {
     id: result.id,
@@ -108,42 +65,40 @@ export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
   return timelineEntry as unknown as TimelineEntry;
 }
 
-interface Tag {
-  id: string;
-  name: string;
-  color: ColorName;
+const defaultEntry: Partial<TimelineEntry> = {
+  title: 'No Title',
+  category: {
+    id: 'a',
+    name: 'unknown',
+    color: 'yellow',
+  },
+  tags: [],
+  url: 'https://www.notion.so/',
+  finished_at: new Date().getTime(),
+};
+
+function createErrorEntry(e: Error): TimelineEntry {
+  return {
+    ...errorEntry,
+    description: e.message,
+  };
 }
 
-export type CategoryName =
-  | 'video-course'
-  | 'conference-talk'
-  | 'interactive-course'
-  | 'workshop'
-  | 'podcast'
-  | 'university-course'
-  | 'error'
-  | 'unknown';
-
-interface Category {
-  id: string;
-  name: CategoryName;
-  color: ColorName;
-}
-
-interface Author {
-  id: string;
-  name: string;
-  color: ColorName;
-}
-
-export type ColorName =
-  | 'default'
-  | 'pink'
-  | 'purple'
-  | 'green'
-  | 'gray'
-  | 'orange'
-  | 'brown'
-  | 'red'
-  | 'yellow'
-  | 'blue';
+const errorEntry: TimelineEntry = {
+  id: 'abc123',
+  title: 'Something went wrong!',
+  category: {
+    id: 'a',
+    name: 'error',
+    color: 'red',
+  },
+  tags: [
+    {
+      id: 'a',
+      name: 'error',
+      color: 'red',
+    },
+  ],
+  url: 'https://www.notion.so/',
+  finished_at: new Date().getTime(),
+};
