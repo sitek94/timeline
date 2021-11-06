@@ -4,9 +4,11 @@ This app gets entries from a Notion database, and displays them as a timeline.
 
 ## Getting Started
 
-1. Get your **Notion Key** and **Database ID** from [Notion API Docs](https://developers.notion.com/docs).
-2. Use `.env.example` to create `.env.local`
-3. Install dependencies:
+1. Create a Notion Database by duplicating [Timeline Template](https://decorous-course-27d.notion.site/9383ec0971b84bf39c1ae4f5e1a1c7fd?v=ddb9ed88aa5245f4a37a9cc417979196)
+2. Create an integration with Notion by following instructions in [Notion API Docs](https://developers.notion.com/docs).
+3. Get your **Notion Key** and **Database ID**.
+4. Use `.env.example` to create `.env.local`.
+5. Install dependencies:
    ```bash
    yarn install
    ```
