@@ -60,6 +60,10 @@ export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
     if (propValue.type === 'date') {
       timelineEntry[propName] = new Date(propValue.date?.start).getTime();
     }
+
+    if (propValue.type === 'url') {
+      timelineEntry[propName] = propValue.url;
+    }
   }
 
   return timelineEntry as unknown as TimelineEntry;
