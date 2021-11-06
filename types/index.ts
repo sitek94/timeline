@@ -1,8 +1,12 @@
 import { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
+import { categoryIcons } from 'config';
+import * as muiColors from '@mui/material/colors';
 
+// NOTION
 export type QueryDatabaseResponseResult =
   QueryDatabaseResponse['results'][number];
 
+// TIMELINE ENTRY
 export interface TimelineEntry {
   id: string;
   title: string;
@@ -45,12 +49,9 @@ export type ColorName =
   | 'yellow'
   | 'blue';
 
-export type CategoryName =
-  | 'video-course'
-  | 'conference-talk'
-  | 'interactive-course'
-  | 'workshop'
-  | 'podcast'
-  | 'university-course'
-  | 'error'
-  | 'unknown';
+export type CategoryName = keyof typeof categoryIcons;
+
+// MATERIAL UI
+export type MuiColors = typeof muiColors;
+export type MuiColorName = keyof MuiColors;
+export type MuiColor = Record<keyof typeof muiColors.grey, string>;

@@ -14,18 +14,8 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import getColorGroup from '../styles/get-color-group';
-import {
-  Build,
-  Close,
-  Help,
-  PlayArrow,
-  Podcasts,
-  School,
-  TouchApp,
-  Videocam,
-} from '@mui/icons-material';
-import { CategoryName, TimelineEntry } from 'types';
+import { TimelineEntry } from 'types';
+import { categoryIcons, getColorGroup } from 'config';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -127,17 +117,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
     </Timeline>
   );
 }
-
-const categoryIcons: Record<CategoryName, JSX.Element> = {
-  'video-course': <PlayArrow />,
-  'conference-talk': <Videocam />,
-  'interactive-course': <TouchApp />,
-  workshop: <Build />,
-  error: <Close />,
-  podcast: <Podcasts />,
-  'university-course': <School />,
-  unknown: <Help />,
-};
 
 function formatCategoryName(kebabCaseName: string) {
   return kebabCaseName.split('-').join(' ');
