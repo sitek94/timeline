@@ -21,6 +21,12 @@ const databaseId = process.env.NOTION_DATABASE_ID as string;
 export async function getTimelineEntries() {
   const response = await notion.databases.query({
     database_id: databaseId,
+    sorts: [
+      {
+        property: 'finished_at',
+        direction: 'descending',
+      },
+    ],
   });
 
   const timelineEntries = response.results.map(result => {
