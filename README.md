@@ -12,11 +12,11 @@ This app gets entries from a Notion database, and displays them as a timeline.
    ```bash
    yarn install
    ```
-4. Run the development server:
+6. Run the development server:
    ```bash
    yarn dev
    ```
-5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+7. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## Next.js
 
