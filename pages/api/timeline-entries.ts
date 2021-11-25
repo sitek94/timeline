@@ -39,6 +39,14 @@ export async function getTimelineEntries() {
 
   return timelineEntries;
 }
+const propertiesToGet: Array<keyof TimelineEntry> = [
+  'title',
+  'description',
+  'category',
+  'finished_at',
+  'url',
+  'tags',
+];
 
 export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
   const timelineEntry: Record<string, unknown> = {
@@ -47,6 +55,11 @@ export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
   };
 
   for (const [propName, propValue] of Object.entries(result.properties)) {
+    // Map only those properties that are used in the app
+    if (!propertiesToGet.includes(propName as any)) {
+      continue;
+    }
+
     if (propValue.type === 'title') {
       timelineEntry[propName] = propValue.title[0]?.plain_text;
     }
