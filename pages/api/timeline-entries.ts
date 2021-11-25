@@ -10,8 +10,8 @@ export default async function handler(
     const timelineEntries = await getTimelineEntries();
 
     res.status(200).json(timelineEntries);
-  } catch {
-    res.status(400).json({ message: 'Ops' });
+  } catch (error) {
+    res.status(400).json({ message: 'Something went wrong' });
   }
 }
 
@@ -28,8 +28,9 @@ export async function getTimelineEntries() {
       },
     ],
   });
+  const publishableResults = filterOutNonPublishableResults(response.results);
 
-  const timelineEntries = response.results.map(result => {
+  const timelineEntries = publishableResults.map(result => {
     try {
       return mapResultToTimelineEntry(result);
     } catch (e: any) {
@@ -39,7 +40,27 @@ export async function getTimelineEntries() {
 
   return timelineEntries;
 }
-const propertiesToGet: Array<keyof TimelineEntry> = [
+
+function filterOutNonPublishableResults(
+  results: QueryDatabaseResponseResult[],
+) {
+  return results.filter(result => {
+    for (const [propName, propValue] of Object.entries(result.properties)) {
+      // If publish property set to false, omit the result
+      if (
+        propName === 'publish' &&
+        propValue.type === 'checkbox' &&
+        !propValue.checkbox
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
+
+const requiredProperties: Array<keyof TimelineEntry> = [
   'title',
   'description',
   'category',
@@ -56,7 +77,7 @@ export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
 
   for (const [propName, propValue] of Object.entries(result.properties)) {
     // Map only those properties that are used in the app
-    if (!propertiesToGet.includes(propName as any)) {
+    if (!requiredProperties.includes(propName as any)) {
       continue;
     }
 
