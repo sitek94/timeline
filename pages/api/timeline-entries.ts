@@ -113,7 +113,7 @@ const defaultEntry: Partial<TimelineEntry> = {
   title: 'No Title',
   category: {
     id: 'a',
-    name: 'unknown',
+    name: 'Unknown',
     color: 'yellow',
   },
   tags: [],
