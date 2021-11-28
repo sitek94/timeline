@@ -29,16 +29,7 @@ export async function getTimelineEntries() {
     ],
   });
   const publishableResults = filterOutNonPublishableResults(response.results);
-
-  const timelineEntries = publishableResults.map(result => {
-    try {
-      return mapResultToTimelineEntry(result);
-    } catch (e: any) {
-      return createErrorEntry(e);
-    }
-  });
-
-  return timelineEntries;
+  return publishableResults.map(mapResultToTimelineEntry);
 }
 
 function filterOutNonPublishableResults(
@@ -117,32 +108,6 @@ const defaultEntry: Partial<TimelineEntry> = {
     color: 'yellow',
   },
   tags: [],
-  url: 'https://www.notion.so/',
-  finished_at: new Date().getTime(),
-};
-
-function createErrorEntry(e: Error): TimelineEntry {
-  return {
-    ...errorEntry,
-    description: e.message,
-  };
-}
-
-const errorEntry: TimelineEntry = {
-  id: 'abc123',
-  title: 'Something went wrong!',
-  category: {
-    id: 'a',
-    name: 'error',
-    color: 'red',
-  },
-  tags: [
-    {
-      id: 'a',
-      name: 'error',
-      color: 'red',
-    },
-  ],
   url: 'https://www.notion.so/',
   finished_at: new Date().getTime(),
 };
