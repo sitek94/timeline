@@ -1,44 +1,7 @@
-import {
-  Apps,
-  AssignmentTurnedIn,
-  Build,
-  Cast,
-  Close,
-  Help,
-  LocalLibrary,
-  PlayArrow,
-  Podcasts,
-  School,
-  Slideshow,
-  Task,
-  TouchApp,
-  Videocam,
-  YouTube,
-} from '@mui/icons-material';
 import { ColorName } from 'types';
 import * as muiColors from '@mui/material/colors';
 import { MuiColor } from 'styles/get-color-group';
 
-// CATEGORIES
-export const categoryIcons = {
-  'YouTube Tutorial': <YouTube />,
-  stream: <Cast />,
-  app: <Apps />,
-  task: <Task />,
-  assignment: <AssignmentTurnedIn />,
-  'video-course': <PlayArrow />,
-  'conference-talk': <Videocam />,
-  'interactive-course': <TouchApp />,
-  workshop: <Build />,
-  error: <Close />,
-  podcast: <Podcasts />,
-  'university-course': <School />,
-  unknown: <Help />,
-  book: <LocalLibrary />,
-  webinar: <Slideshow />,
-};
-
-// COLORS
 const notionToMuiColors: Record<ColorName, MuiColor> = {
   default: muiColors.grey,
   pink: muiColors.pink,

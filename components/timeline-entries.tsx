@@ -4,7 +4,6 @@ import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
 import Typography from '@mui/material/Typography';
 import {
   Box,
@@ -15,7 +14,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { TimelineEntry } from 'types';
-import { categoryIcons, getColorGroup } from 'config';
+import { getColorGroup } from 'config';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -28,7 +27,16 @@ export default function TimelineEntries({ entries }: TimelineProps) {
   return (
     <Timeline position={isMobile ? 'right' : 'alternate'} sx={{ mb: 0, pb: 4 }}>
       {entries.map(
-        ({ id, title, description, finished_at, tags, category, url }) => {
+        ({
+          id,
+          title,
+          description,
+          finished_at,
+          tags,
+          category,
+          icon,
+          url,
+        }) => {
           return (
             <TimelineItem
               key={id}
@@ -42,18 +50,18 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               {/* Category Icon with Tooltip */}
               <TimelineSeparator>
                 <TimelineConnector />
-                <Tooltip
-                  arrow
-                  placement="top"
-                  title={
-                    <Box sx={{ textTransform: 'capitalize' }}>
-                      {formatCategoryName(category.name)}
-                    </Box>
-                  }
-                >
-                  <TimelineDot variant="outlined">
-                    {categoryIcons[category.name]}
-                  </TimelineDot>
+                <Tooltip arrow placement="top" title={category}>
+                  <Box
+                    role="img"
+                    sx={{
+                      cursor: 'default',
+                      my: 2,
+                      fontSize: '2rem',
+                      lineHeight: 1,
+                    }}
+                  >
+                    {icon}
+                  </Box>
                 </Tooltip>
                 <TimelineConnector />
               </TimelineSeparator>
@@ -116,10 +124,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
       )}
     </Timeline>
   );
-}
-
-function formatCategoryName(kebabCaseName: string) {
-  return kebabCaseName.split('-').join(' ');
 }
 
 function formatTimestamp(timestamp: number) {

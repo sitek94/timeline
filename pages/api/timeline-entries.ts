@@ -29,16 +29,7 @@ export async function getTimelineEntries() {
     ],
   });
   const publishableResults = filterOutNonPublishableResults(response.results);
-
-  const timelineEntries = publishableResults.map(result => {
-    try {
-      return mapResultToTimelineEntry(result);
-    } catch (e: any) {
-      return createErrorEntry(e);
-    }
-  });
-
-  return timelineEntries;
+  return publishableResults.map(mapResultToTimelineEntry);
 }
 
 function filterOutNonPublishableResults(
@@ -74,6 +65,10 @@ export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
     id: result.id,
     ...defaultEntry,
   };
+
+  if (result.icon?.type === 'emoji') {
+    timelineEntry['icon'] = result.icon.emoji;
+  }
 
   for (const [propName, propValue] of Object.entries(result.properties)) {
     // Map only those properties that are used in the app
@@ -111,38 +106,9 @@ export function mapResultToTimelineEntry(result: QueryDatabaseResponseResult) {
 
 const defaultEntry: Partial<TimelineEntry> = {
   title: 'No Title',
-  category: {
-    id: 'a',
-    name: 'unknown',
-    color: 'yellow',
-  },
+  category: 'No Category',
+  icon: '❤️',
   tags: [],
-  url: 'https://www.notion.so/',
-  finished_at: new Date().getTime(),
-};
-
-function createErrorEntry(e: Error): TimelineEntry {
-  return {
-    ...errorEntry,
-    description: e.message,
-  };
-}
-
-const errorEntry: TimelineEntry = {
-  id: 'abc123',
-  title: 'Something went wrong!',
-  category: {
-    id: 'a',
-    name: 'error',
-    color: 'red',
-  },
-  tags: [
-    {
-      id: 'a',
-      name: 'error',
-      color: 'red',
-    },
-  ],
   url: 'https://www.notion.so/',
   finished_at: new Date().getTime(),
 };
