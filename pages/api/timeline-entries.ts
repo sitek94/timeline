@@ -10,8 +10,8 @@ export default async function handler(
     const timelineEntries = await getTimelineEntries();
 
     res.status(200).json(timelineEntries);
-  } catch (error) {
-    res.status(400).json({ message: 'Something went wrong' });
+  } catch (e: any) {
+    res.status(500).send({ message: e.message });
   }
 }
 

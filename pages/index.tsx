@@ -87,7 +87,13 @@ export default function Index() {
 function useTimelineEntries() {
   const { data, error } = useSWR<TimelineEntry[]>(
     '/api/timeline-entries',
-    (url: string) => fetch(url).then(res => res.json()),
+    async (url: string) => {
+      const res = await fetch(url);
+      if (res.ok) {
+        return await res.json();
+      }
+      throw new Error();
+    },
   );
 
   return {
