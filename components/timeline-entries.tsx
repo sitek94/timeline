@@ -42,15 +42,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               {/* Category Icon with Tooltip */}
               <TimelineSeparator>
                 <TimelineConnector />
-                <Tooltip
-                  arrow
-                  placement="top"
-                  title={
-                    <Box sx={{ textTransform: 'capitalize' }}>
-                      {formatCategoryName(category.name)}
-                    </Box>
-                  }
-                >
+                <Tooltip arrow placement="top" title={category.name}>
                   <TimelineDot variant="outlined">
                     {categoryIcons[category.name]}
                   </TimelineDot>
@@ -116,10 +108,6 @@ export default function TimelineEntries({ entries }: TimelineProps) {
       )}
     </Timeline>
   );
-}
-
-function formatCategoryName(kebabCaseName: string) {
-  return kebabCaseName.split('-').join(' ');
 }
 
 function formatTimestamp(timestamp: number) {
