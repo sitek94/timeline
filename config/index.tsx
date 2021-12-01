@@ -16,9 +16,8 @@ import {
   Videocam,
   YouTube,
 } from '@mui/icons-material';
-import { ColorName } from 'types';
+import { ColorName, MuiColor } from 'types';
 import * as muiColors from '@mui/material/colors';
-import { MuiColor } from 'styles/get-color-group';
 
 // CATEGORIES
 export const categoryIcons = {
