@@ -3,22 +3,18 @@ import {
   Box,
   Container,
   Divider,
-  Fab,
   LinearProgress,
   Paper,
   Typography,
 } from '@mui/material';
-import { useColorMode } from 'styles/color-mode-and-theme';
 import useSWR from 'swr';
 import * as React from 'react';
 import { TimelineEntry } from 'types';
 import tissueSvg from 'images/tissue.svg';
 import Image from 'next/image';
-import { NightsStay, WbSunny } from '@mui/icons-material';
 import TimelineEntries from 'components/timeline-entries';
 
 export default function Index() {
-  const colorMode = useColorMode();
   const { timelineEntries, isError, isLoading } = useTimelineEntries();
 
   return (
@@ -31,16 +27,6 @@ export default function Index() {
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⏳</text></svg>"
         />
       </Head>
-
-      <Box sx={{ position: 'absolute', top: 0, right: 0, m: 4 }}>
-        <Fab
-          color={colorMode.isDark ? 'default' : 'primary'}
-          aria-label="toggle light/dark mode"
-          onClick={colorMode.toggle}
-        >
-          {colorMode.isDark ? <WbSunny /> : <NightsStay />}
-        </Fab>
-      </Box>
 
       <Container maxWidth="md" sx={{ px: 0 }}>
         <Paper sx={{ minHeight: '100vh' }} square>
