@@ -4,6 +4,7 @@ import {
   Build,
   Cast,
   Close,
+  Functions,
   Help,
   LocalLibrary,
   PlayArrow,
@@ -21,22 +22,34 @@ import { MuiColor } from 'styles/get-color-group';
 
 // CATEGORIES
 export const categoryIcons = {
-  'YouTube Tutorial': <YouTube />,
-  Stream: <Cast />,
   App: <Apps />,
-  Task: <Task />,
+  Algorithm: <Functions />,
   Assignment: <AssignmentTurnedIn />,
-  'Video Course': <PlayArrow />,
   'Conference Talk': <Videocam />,
-  'Interactive Course': <TouchApp />,
-  Workshop: <Build />,
+  Book: <LocalLibrary />,
   Error: <Close />,
+  'Interactive Course': <TouchApp />,
   Podcast: <Podcasts />,
+  Stream: <Cast />,
+  Task: <Task />,
   'University Course': <School />,
   Unknown: <Help />,
-  Book: <LocalLibrary />,
+  'Video Course': <PlayArrow />,
   Webinar: <Slideshow />,
+  Workshop: <Build />,
+  'YouTube Tutorial': <YouTube />,
 };
+
+function isCategory(category: string): category is keyof typeof categoryIcons {
+  return category in categoryIcons;
+}
+
+export function getIcon(category: string) {
+  if (isCategory(category)) {
+    return categoryIcons[category];
+  }
+  return categoryIcons.Unknown;
+}
 
 // COLORS
 const notionToMuiColors: Record<ColorName, MuiColor> = {

@@ -15,7 +15,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { TimelineEntry } from 'types';
-import { categoryIcons, getColorGroup } from 'config';
+import { getColorGroup, getIcon } from 'config';
 
 interface TimelineProps {
   entries: TimelineEntry[];
@@ -44,7 +44,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
                 <TimelineConnector />
                 <Tooltip arrow placement="top" title={category.name}>
                   <TimelineDot variant="outlined">
-                    {categoryIcons[category.name]}
+                    {getIcon(category.name)}
                   </TimelineDot>
                 </Tooltip>
                 <TimelineConnector />
