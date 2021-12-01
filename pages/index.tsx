@@ -9,10 +9,10 @@ import {
 } from '@mui/material';
 import useSWR from 'swr';
 import * as React from 'react';
-import { TimelineEntry } from 'types';
+import { TimelineEntry } from 'src/types';
 import tissueSvg from 'images/tissue.svg';
 import Image from 'next/image';
-import TimelineEntries from 'components/timeline-entries';
+import TimelineEntries from 'src/timeline-entries';
 
 export default function Index() {
   const { timelineEntries, isError, isLoading } = useTimelineEntries();

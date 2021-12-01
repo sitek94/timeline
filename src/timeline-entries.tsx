@@ -14,8 +14,8 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { TimelineEntry } from 'types';
-import { getColorGroup, getIcon } from 'config';
+import { TimelineEntry } from 'src/types';
+import { getColorGroup, getIcon } from 'src/config';
 
 interface TimelineProps {
   entries: TimelineEntry[];

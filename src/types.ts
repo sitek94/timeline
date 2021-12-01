@@ -1,5 +1,5 @@
 import { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
-import { categoryIcons } from 'config';
+import { categoryIcons } from 'src/config';
 import * as muiColors from '@mui/material/colors';
 
 // NOTION
