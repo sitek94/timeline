@@ -59,7 +59,7 @@ const notionToMuiColors: Record<ColorName, MuiColor> = {
   purple: muiColors.deepPurple,
   green: muiColors.teal,
   gray: muiColors.grey,
-  orange: muiColors.deepOrange,
+  orange: muiColors.orange,
   brown: muiColors.brown,
   red: muiColors.red,
   yellow: muiColors.yellow,

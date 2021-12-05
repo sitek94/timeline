@@ -34,6 +34,10 @@ function createTheme(mode: 'dark' | 'light') {
       error: {
         main: red.A400,
       },
+      // Used by `getContrastText()` to maximize the contrast between
+      // the background and the text.
+      // https://mui.com/customization/palette/
+      contrastThreshold: 3,
     },
   });
 }

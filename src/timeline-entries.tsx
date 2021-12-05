@@ -43,7 +43,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
               <TimelineSeparator>
                 <TimelineConnector />
                 <Tooltip arrow placement="top" title={category.name}>
-                  <TimelineDot variant="outlined">
+                  <TimelineDot role="img" variant="outlined">
                     {getIcon(category.name)}
                   </TimelineDot>
                 </Tooltip>
@@ -85,8 +85,9 @@ export default function TimelineEntries({ entries }: TimelineProps) {
                 <Box>
                   {tags.map(tag => {
                     const colorGroup = getColorGroup(tag.color);
-                    const bgcolor = colorGroup[500];
+                    const bgcolor = colorGroup[700];
                     const color = theme.palette.getContrastText(bgcolor);
+
                     return (
                       <Chip
                         key={tag.id}
