@@ -1,22 +1,8 @@
 import Head from 'next/head';
-import {
-  Box,
-  Container,
-  Divider,
-  LinearProgress,
-  Paper,
-  Typography,
-} from '@mui/material';
-import useSWR from 'swr';
 import * as React from 'react';
-import { TimelineEntry } from 'src/types';
-import tissueSvg from 'images/tissue.svg';
-import Image from 'next/image';
-import TimelineEntries from 'src/timeline-entries';
+import App from 'src/app';
 
 export default function Index() {
-  const { timelineEntries, isError, isLoading } = useTimelineEntries();
-
   return (
     <div>
       <Head>
@@ -28,66 +14,7 @@ export default function Index() {
         />
       </Head>
 
-      <Container maxWidth="md" sx={{ px: 0 }}>
-        <Paper sx={{ minHeight: '100vh' }} square>
-          <Typography
-            variant="h2"
-            component="h1"
-            textAlign={{ xs: 'left', sm: 'center' }}
-            p={4}
-          >
-            Timeline
-          </Typography>
-          <Divider />
-          {isLoading && <LinearProgress />}
-          {isError && (
-            <Box
-              sx={{
-                textAlign: 'center',
-              }}
-            >
-              <Image
-                src={tissueSvg}
-                alt="Empty toilet paper tissue"
-                width={300}
-                height={300}
-              />
-              <Typography
-                mt={-4}
-                mb={1}
-                variant="h5"
-                component="h2"
-                textAlign="center"
-              >
-                {`"Oops!...I Did It Again" - Britney Spears.`}
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                {`We're really sorry, but something went wrong. Try refreshing the page.`}
-              </Typography>
-            </Box>
-          )}
-          {timelineEntries && <TimelineEntries entries={timelineEntries} />}
-        </Paper>
-      </Container>
+      <App />
     </div>
   );
-}
-
-function useTimelineEntries() {
-  const { data, error } = useSWR<TimelineEntry[]>(
-    '/api/timeline-entries',
-    async (url: string) => {
-      const res = await fetch(url);
-      if (res.ok) {
-        return await res.json();
-      }
-      throw new Error();
-    },
-  );
-
-  return {
-    timelineEntries: data,
-    isLoading: !error && !data,
-    isError: error,
-  };
 }
