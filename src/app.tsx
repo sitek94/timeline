@@ -10,11 +10,14 @@ import {
 import useSWRInfinite from 'swr/infinite';
 import * as React from 'react';
 import GithubCorner from 'react-github-corner';
-import { TimelineEntries, TimelineEntriesWrapper } from './timeline-entries';
-import ErrorMessage from './error-message';
-import { LoadMoreButton, NoMoreEntriesMessage } from './lib';
+import {
+  TimelineEntries,
+  TimelineEntriesSkeleton,
+  TimelineEntriesWrapper,
+} from './timeline-entries';
+import { ErrorMessage, LoadMoreButton, NoMoreEntriesMessage } from 'src/lib';
 
-export const PAGE_SIZE = 40;
+export const PAGE_SIZE = 10;
 
 export default function App() {
   const theme = useTheme();
@@ -64,20 +67,20 @@ function Main() {
 
   return (
     <>
-      <NoMoreEntriesMessage />
       <TimelineEntriesWrapper>
         {data?.map((page, i) => (
           <TimelineEntries key={i} entries={page.results} />
         ))}
+        {isLoadingMore && <TimelineEntriesSkeleton />}
       </TimelineEntriesWrapper>
       <Box sx={{ my: 2, textAlign: 'center' }}>
-        {isLoadingMore ? (
-          <p>Loading...</p>
-        ) : isReachingEnd ? (
-          <NoMoreEntriesMessage />
-        ) : (
-          <LoadMoreButton onClick={() => setSize(size + 1)} />
-        )}
+        {!isLoadingMore ? (
+          isReachingEnd ? (
+            <NoMoreEntriesMessage />
+          ) : (
+            <LoadMoreButton onClick={() => setSize(size + 1)} />
+          )
+        ) : null}
       </Box>
     </>
   );

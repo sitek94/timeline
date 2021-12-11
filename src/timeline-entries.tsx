@@ -10,12 +10,14 @@ import {
   Box,
   Chip,
   Link,
+  Skeleton,
   Tooltip,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { TimelineEntry } from 'src/types';
 import { getColorGroup, getIcon } from 'src/config';
+import { PAGE_SIZE } from './app';
 
 export function TimelineEntriesWrapper({
   children,
@@ -117,6 +119,51 @@ export function TimelineEntries({ entries }: { entries: TimelineEntry[] }) {
           );
         },
       )}
+    </>
+  );
+}
+
+export function TimelineEntriesSkeleton() {
+  return (
+    <>
+      {Array.from({ length: PAGE_SIZE }).map((_, i) => (
+        <TimelineItem
+          key={i}
+          sx={{
+            // Collapse left timeline item, which is going to be empty on mobiles
+            '&:before': {
+              flex: { xs: 0, sm: 1 },
+            },
+          }}
+        >
+          {/* Category Icon with Tooltip */}
+          <TimelineSeparator>
+            <TimelineConnector />
+            <TimelineDot role="img" variant="outlined">
+              {/*<Circle sx={{ color: 'transparent' }} />*/}
+            </TimelineDot>
+            <TimelineConnector />
+          </TimelineSeparator>
+
+          <TimelineContent sx={{ py: '12px', px: 2 }}>
+            {/* Date */}
+            <Typography variant="body2" color="text.secondary" component="span">
+              <Skeleton />
+            </Typography>
+            {/* Title Link */}
+            <Typography variant="h6" component="h2" mb={0.5}>
+              <Skeleton />
+            </Typography>
+
+            <Typography variant="body2" mb={0.5}>
+              <Skeleton />
+            </Typography>
+
+            {/* Tags */}
+            <Skeleton width={120} sx={{ display: 'inline-block' }} />
+          </TimelineContent>
+        </TimelineItem>
+      ))}
     </>
   );
 }
