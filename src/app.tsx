@@ -1,6 +1,9 @@
 import {
+  Box,
+  ButtonProps,
   Container,
   Divider,
+  Fab,
   LinearProgress,
   Paper,
   Typography,
@@ -11,6 +14,7 @@ import * as React from 'react';
 import GithubCorner from 'react-github-corner';
 import { TimelineEntries, TimelineEntriesWrapper } from './timeline-entries';
 import ErrorMessage from './error-message';
+import { Downloading } from '@mui/icons-material';
 
 export default function App() {
   const theme = useTheme();
@@ -24,7 +28,7 @@ export default function App() {
         size={80}
         direction="left"
       />
-      <Paper sx={{ minHeight: '100vh' }} square>
+      <Paper sx={{ minHeight: '100vh', pb: 8 }} square>
         <Typography
           variant="h2"
           component="h1"
@@ -63,12 +67,23 @@ function Main() {
           <TimelineEntries key={i} entries={page.results} />
         ))}
       </TimelineEntriesWrapper>
-      {isLoadingMore ? (
-        <p>Loading...</p>
-      ) : (
-        <button onClick={() => setSize(size + 1)}>load more</button>
-      )}
+      <Box sx={{ my: 2, textAlign: 'center' }}>
+        {isLoadingMore ? (
+          <p>Loading...</p>
+        ) : (
+          <LoadMoreButton onClick={() => setSize(size + 1)} />
+        )}
+      </Box>
     </>
+  );
+}
+
+function LoadMoreButton({ onClick }: ButtonProps) {
+  return (
+    <Fab color="primary" variant="extended" onClick={onClick}>
+      <Downloading sx={{ mr: 1 }} />
+      Load more
+    </Fab>
   );
 }
 
