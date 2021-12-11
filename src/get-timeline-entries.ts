@@ -4,7 +4,13 @@ import { QueryDatabaseResponseResult, TimelineEntry } from 'src/types';
 const notion = new Client({ auth: process.env.NOTION_KEY });
 const databaseId = process.env.NOTION_DATABASE_ID as string;
 
-export async function getTimelineEntries() {
+export interface GetTimelineEntriesResponse {
+  hasMore: boolean;
+  nextCursor: string | null;
+  results: TimelineEntry[];
+}
+
+export async function getTimelineEntries(): Promise<GetTimelineEntriesResponse> {
   const response = await notion.databases.query({
     database_id: databaseId,
     sorts: [
@@ -13,9 +19,19 @@ export async function getTimelineEntries() {
         direction: 'descending',
       },
     ],
+    page_size: 20,
   });
+
+  const { has_more: hasMore, next_cursor: nextCursor } = response;
+
   const publishableResults = filterOutNonPublishableResults(response.results);
-  return publishableResults.map(mapResultToTimelineEntry);
+  const timelineEntries = publishableResults.map(mapResultToTimelineEntry);
+
+  return {
+    hasMore,
+    nextCursor,
+    results: timelineEntries,
+  };
 }
 
 function filterOutNonPublishableResults(

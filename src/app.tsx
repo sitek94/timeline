@@ -8,14 +8,22 @@ import {
 } from '@mui/material';
 import useSWR from 'swr';
 import * as React from 'react';
-import { TimelineEntry } from 'src/types';
 import TimelineEntries from 'src/timeline-entries';
 import ErrorMessage from './error-message';
 import GithubCorner from 'react-github-corner';
+import { GetTimelineEntriesResponse } from './get-timeline-entries';
 
 export default function App() {
   const theme = useTheme();
-  const { timelineEntries, isError, isLoading } = useTimelineEntries();
+  const {
+    data: timelineEntries,
+    hasMore,
+    nextCursor,
+    isError,
+    isLoading,
+  } = useTimelineEntries();
+
+  console.log({ hasMore, nextCursor });
 
   return (
     <Container maxWidth="md" sx={{ px: 0 }}>
@@ -45,7 +53,7 @@ export default function App() {
 }
 
 function useTimelineEntries() {
-  const { data, error } = useSWR<TimelineEntry[]>(
+  const { data, error } = useSWR<GetTimelineEntriesResponse>(
     '/api/timeline-entries',
     async (url: string) => {
       const res = await fetch(url);
@@ -56,8 +64,19 @@ function useTimelineEntries() {
     },
   );
 
+  if (data) {
+    const { hasMore, nextCursor, results } = data;
+
+    return {
+      hasMore,
+      nextCursor,
+      data: results,
+      isError: false,
+      isLoading: false,
+    };
+  }
+
   return {
-    timelineEntries: data,
     isLoading: !error && !data,
     isError: error,
   };
