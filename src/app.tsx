@@ -6,24 +6,14 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import * as React from 'react';
-import TimelineEntries from 'src/timeline-entries';
-import ErrorMessage from './error-message';
 import GithubCorner from 'react-github-corner';
-import { GetTimelineEntriesResponse } from './get-timeline-entries';
+import { TimelineEntries, TimelineEntriesWrapper } from './timeline-entries';
+import ErrorMessage from './error-message';
 
 export default function App() {
   const theme = useTheme();
-  const {
-    data: timelineEntries,
-    hasMore,
-    nextCursor,
-    isError,
-    isLoading,
-  } = useTimelineEntries();
-
-  console.log({ hasMore, nextCursor });
 
   return (
     <Container maxWidth="md" sx={{ px: 0 }}>
@@ -44,40 +34,58 @@ export default function App() {
           Timeline
         </Typography>
         <Divider />
-        {isLoading && <LinearProgress />}
-        {isError && <ErrorMessage />}
-        {timelineEntries && <TimelineEntries entries={timelineEntries} />}
+
+        <Main />
       </Paper>
     </Container>
   );
 }
 
-function useTimelineEntries() {
-  const { data, error } = useSWR<GetTimelineEntriesResponse>(
-    '/api/timeline-entries',
-    async (url: string) => {
-      const res = await fetch(url);
-      if (res.ok) {
-        return await res.json();
-      }
-      throw new Error();
-    },
-  );
+function Main() {
+  const { data, error, size, setSize } = useSWRInfinite(getKey, fetcher);
 
-  if (data) {
-    const { hasMore, nextCursor, results } = data;
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore =
+    isLoadingInitialData ||
+    (size > 0 && data && typeof data[size - 1] === 'undefined');
 
-    return {
-      hasMore,
-      nextCursor,
-      data: results,
-      isError: false,
-      isLoading: false,
-    };
+  if (!data) {
+    return <LinearProgress />;
+  }
+  if (error) {
+    return <ErrorMessage />;
   }
 
-  return {
-    isLoading: !error && !data,
-    isError: error,
-  };
+  return (
+    <>
+      <TimelineEntriesWrapper>
+        {data.map((page, i) => (
+          <TimelineEntries key={i} entries={page.results} />
+        ))}
+      </TimelineEntriesWrapper>
+      {isLoadingMore ? (
+        <p>Loading...</p>
+      ) : (
+        <button onClick={() => setSize(size + 1)}>load more</button>
+      )}
+    </>
+  );
+}
+
+const getKey = (pageIndex: number, previousPageData: any) => {
+  // Reached the end
+  if (previousPageData && !previousPageData.results.length) {
+    return null;
+  }
+  // First page, there is no previous page data
+  if (pageIndex === 0) {
+    return '/api/data';
+  }
+
+  // Add the cursor to api endpoint
+  return `/api/data?cursor=${previousPageData.nextCursor}`;
+};
+
+function fetcher(url: string) {
+  return fetch(url).then(r => r.json());
 }

@@ -17,16 +17,26 @@ import {
 import { TimelineEntry } from 'src/types';
 import { getColorGroup, getIcon } from 'src/config';
 
-interface TimelineProps {
-  entries: TimelineEntry[];
-}
-
-export default function TimelineEntries({ entries }: TimelineProps) {
+export function TimelineEntriesWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Timeline position={isMobile ? 'right' : 'alternate'} sx={{ mb: 0, pb: 4 }}>
+      {children}
+    </Timeline>
+  );
+}
+
+export function TimelineEntries({ entries }: { entries: TimelineEntry[] }) {
+  const theme = useTheme();
+
+  return (
+    <>
       {entries.map(
         ({ id, title, description, finished_at, tags, category, url }) => {
           return (
@@ -107,7 +117,7 @@ export default function TimelineEntries({ entries }: TimelineProps) {
           );
         },
       )}
-    </Timeline>
+    </>
   );
 }
 

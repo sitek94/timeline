@@ -10,7 +10,9 @@ export interface GetTimelineEntriesResponse {
   results: TimelineEntry[];
 }
 
-export async function getTimelineEntries(): Promise<GetTimelineEntriesResponse> {
+export async function getTimelineEntries(
+  cursor?: string,
+): Promise<GetTimelineEntriesResponse> {
   const response = await notion.databases.query({
     database_id: databaseId,
     sorts: [
@@ -19,7 +21,8 @@ export async function getTimelineEntries(): Promise<GetTimelineEntriesResponse> 
         direction: 'descending',
       },
     ],
-    page_size: 20,
+    start_cursor: cursor,
+    page_size: 10,
   });
 
   const { has_more: hasMore, next_cursor: nextCursor } = response;
