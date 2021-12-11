@@ -1,9 +1,7 @@
 import {
   Box,
-  ButtonProps,
   Container,
   Divider,
-  Fab,
   LinearProgress,
   Paper,
   Typography,
@@ -14,7 +12,9 @@ import * as React from 'react';
 import GithubCorner from 'react-github-corner';
 import { TimelineEntries, TimelineEntriesWrapper } from './timeline-entries';
 import ErrorMessage from './error-message';
-import { Downloading } from '@mui/icons-material';
+import { LoadMoreButton, NoMoreEntriesMessage } from './lib';
+
+export const PAGE_SIZE = 40;
 
 export default function App() {
   const theme = useTheme();
@@ -53,6 +53,8 @@ function Main() {
     isLoadingInitialData ||
     (size > 0 && data && typeof data[size - 1] === 'undefined');
 
+  const isReachingEnd = data && data[data.length - 1].hasMore === false;
+
   if (!data) {
     return <LinearProgress />;
   }
@@ -62,28 +64,22 @@ function Main() {
 
   return (
     <>
+      <NoMoreEntriesMessage />
       <TimelineEntriesWrapper>
-        {data.map((page, i) => (
+        {data?.map((page, i) => (
           <TimelineEntries key={i} entries={page.results} />
         ))}
       </TimelineEntriesWrapper>
       <Box sx={{ my: 2, textAlign: 'center' }}>
         {isLoadingMore ? (
           <p>Loading...</p>
+        ) : isReachingEnd ? (
+          <NoMoreEntriesMessage />
         ) : (
           <LoadMoreButton onClick={() => setSize(size + 1)} />
         )}
       </Box>
     </>
-  );
-}
-
-function LoadMoreButton({ onClick }: ButtonProps) {
-  return (
-    <Fab color="primary" variant="extended" onClick={onClick}>
-      <Downloading sx={{ mr: 1 }} />
-      Load more
-    </Fab>
   );
 }
 

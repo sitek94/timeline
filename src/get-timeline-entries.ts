@@ -1,5 +1,6 @@
 import { Client } from '@notionhq/client';
 import { QueryDatabaseResponseResult, TimelineEntry } from 'src/types';
+import { PAGE_SIZE } from './app';
 
 const notion = new Client({ auth: process.env.NOTION_KEY });
 const databaseId = process.env.NOTION_DATABASE_ID as string;
@@ -22,7 +23,7 @@ export async function getTimelineEntries(
       },
     ],
     start_cursor: cursor,
-    page_size: 10,
+    page_size: PAGE_SIZE,
   });
 
   const { has_more: hasMore, next_cursor: nextCursor } = response;
